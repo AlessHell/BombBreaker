@@ -1023,8 +1023,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BoomerShooter.UI.BoomerShooterMainMenu
   Mode: 2
-  GameTitle: BOMB BREAKER
-  BackgroundTexture: {fileID: 2800000, guid: cd16ec243e9d76f08ab87a3a506e139e, type: 3}
+  GameTitleLine1: BOMB
+  GameTitleLine2: BREAKER
+  BackgroundTexture: {fileID: 2800000, guid: 385f67a70306204d8a26046bcc0e1cab, type: 3}
+  TitleFont: {fileID: 12800000, guid: 22ba22082c59fc8bc836c3f2ae4ce846, type: 3}
+  SubtitleFont: {fileID: 12800000, guid: 05cd0917f130dc052951ac7cadb87a77, type: 3}
 --- !u!4 &1526068283
 Transform:
   m_ObjectHideFlags: 0

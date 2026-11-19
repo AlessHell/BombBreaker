@@ -17,7 +17,7 @@ namespace BoomerShooter.LevelSystem
         // Global Options
         public float MasterVolume = 1.0f;
         public float LookSensitivity = 1.0f;
-        public bool UseBrightWorkLighting = true;
+        public bool UseBrightWorkLighting = false;
 
         [System.NonSerialized]
         public HashSet<string> CollectedKeys = new HashSet<string>();

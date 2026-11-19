@@ -18,8 +18,8 @@ namespace BoomerShooter.LevelSystem
         public string NextSceneName = "SecondaryScene";
 
         [Header("Lighting Mode")]
-        [Tooltip("Temporarily enforces bright studio lighting at runtime for level design & testing")]
-        public bool UseBrightWorkLighting = true;
+        [Tooltip("Optional flat studio lighting mode; false uses the atmospheric Bomb Breaker cover lighting")]
+        public bool UseBrightWorkLighting = false;
 
         [Header("Statistics")]
         public int TotalSecretsInLevel = 1;
@@ -57,17 +57,19 @@ namespace BoomerShooter.LevelSystem
             persist.LastPlayedSceneName = SceneManager.GetActiveScene().name;
             persist.LastPlayedLevelTitle = $"E1M{LevelNumber}: {LevelName}";
 
-            ApplyLightingMode(UseBrightWorkLighting && persist.UseBrightWorkLighting);
+            ApplyLightingMode(persist.UseBrightWorkLighting);
         }
 
-        public void ApplyLightingMode(bool brightMode)
+        public void ApplyLightingMode(bool flatWorkLighting)
         {
-            if (brightMode)
+            LightmapSettings.lightmaps = new LightmapData[0];
+
+            if (flatWorkLighting)
             {
-                LightmapSettings.lightmaps = new LightmapData[0];
                 RenderSettings.ambientMode = UnityEngine.Rendering.AmbientMode.Flat;
                 RenderSettings.ambientLight = new Color(0.92f, 0.92f, 0.96f, 1f);
                 RenderSettings.ambientIntensity = 1.5f;
+                RenderSettings.fog = false;
 
                 var dirLight = GameObject.Find("Directional Light");
                 if (dirLight != null)
@@ -83,19 +85,28 @@ namespace BoomerShooter.LevelSystem
             }
             else
             {
-                RenderSettings.ambientMode = UnityEngine.Rendering.AmbientMode.Flat;
-                RenderSettings.ambientLight = new Color(0.22f, 0.20f, 0.34f, 1f);
-                RenderSettings.ambientIntensity = 0.8f;
+                // Atmospheric "Bomb Breaker" Stormy Highland lighting matching FondoMenu.jpg
+                RenderSettings.ambientMode = UnityEngine.Rendering.AmbientMode.Trilight;
+                RenderSettings.ambientSkyColor = new Color(0.56f, 0.72f, 0.71f, 1f);
+                RenderSettings.ambientEquatorColor = new Color(0.36f, 0.47f, 0.46f, 1f);
+                RenderSettings.ambientGroundColor = new Color(0.20f, 0.27f, 0.18f, 1f);
+
+                RenderSettings.fog = true;
+                RenderSettings.fogMode = FogMode.ExponentialSquared;
+                RenderSettings.fogColor = new Color(0.27f, 0.39f, 0.39f, 1f);
+                RenderSettings.fogDensity = (LevelNumber == 3) ? 0.0062f : 0.0085f;
 
                 var dirLight = GameObject.Find("Directional Light");
                 if (dirLight != null)
                 {
+                    dirLight.transform.rotation = Quaternion.Euler(48f, -32f, 0f);
                     var l = dirLight.GetComponent<Light>();
                     if (l != null)
                     {
-                        l.intensity = 0.9f;
-                        l.color = new Color(0.75f, 0.7f, 0.95f);
+                        l.intensity = 1.45f;
+                        l.color = new Color(0.86f, 0.94f, 0.93f, 1f);
                         l.shadows = LightShadows.Soft;
+                        l.shadowStrength = 0.55f;
                     }
                 }
             }
