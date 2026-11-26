@@ -961,7 +961,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BoomerShooter.UI.BoomerShooterMainMenu
   Mode: 0
-  GameTitleLine1: BOMB
+  GameTitleLine1: BONE
   GameTitleLine2: BREAKER
   BackgroundTexture: {fileID: 2800000, guid: 385f67a70306204d8a26046bcc0e1cab, type: 3}
   TitleFont: {fileID: 12800000, guid: 22ba22082c59fc8bc836c3f2ae4ce846, type: 3}

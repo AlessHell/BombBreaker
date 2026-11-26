@@ -14,7 +14,7 @@ namespace BoomerShooter.UI
     public class BoomerShooterMainMenu : MonoBehaviour
     {
         public BoomerMenuMode Mode = BoomerMenuMode.MainMenu;
-        public string GameTitleLine1 = "BOMB";
+        public string GameTitleLine1 = "BONE";
         public string GameTitleLine2 = "BREAKER";
         public Color TitleMainColor = new Color(1.0f, 0.88f, 0.22f, 1f);
         public Color TitleOutlineColor = new Color(0.02f, 0.03f, 0.05f, 1f);
@@ -538,7 +538,7 @@ namespace BoomerShooter.UI
 
         void DrawVictoryButtons()
         {
-            GUILayout.Label("HAS COMPLETADO BOMB BREAKER!", m_SubtitleStyle);
+            GUILayout.Label("HAS COMPLETADO BONE BREAKER!", m_SubtitleStyle);
             GUILayout.Space(14f);
 
             if (GUILayout.Button("NUEVA CAMPANA (E1M1)", m_PrimaryBarButtonStyle, GUILayout.Height(58f)))
@@ -669,42 +669,54 @@ namespace BoomerShooter.UI
             var persist = PlayerCampaignPersistence.EnsureInstance();
 
             GUILayout.Label("OPCIONES Y AJUSTES", m_SectionTitleStyle);
-            GUILayout.Space(22f);
+            GUILayout.Space(14f);
 
             GUILayout.BeginVertical(m_CardBoxStyle);
 
             GUILayout.Label($"VOLUMEN MAESTRO: {Mathf.RoundToInt(persist.MasterVolume * 100f)}%", m_LabelStyle);
-            GUILayout.Space(6f);
-            float newVol = GUILayout.HorizontalSlider(persist.MasterVolume, 0.0f, 1.0f, GUILayout.Height(28f));
+            GUILayout.Space(4f);
+            float newVol = GUILayout.HorizontalSlider(persist.MasterVolume, 0.0f, 1.0f, GUILayout.Height(26f));
             if (!Mathf.Approximately(newVol, persist.MasterVolume))
             {
                 persist.MasterVolume = newVol;
                 AudioListener.volume = newVol;
             }
 
-            GUILayout.Space(22f);
+            GUILayout.Space(14f);
 
             GUILayout.Label($"SENSIBILIDAD DEL RATON: {persist.LookSensitivity:F2}", m_LabelStyle);
-            GUILayout.Space(6f);
-            persist.LookSensitivity = GUILayout.HorizontalSlider(persist.LookSensitivity, 0.2f, 3.0f, GUILayout.Height(28f));
+            GUILayout.Space(4f);
+            persist.LookSensitivity = GUILayout.HorizontalSlider(persist.LookSensitivity, 0.2f, 3.0f, GUILayout.Height(26f));
 
-            GUILayout.Space(24f);
+            GUILayout.Space(14f);
 
             string lightModeLabel = persist.UseBrightWorkLighting
                 ? "ILUMINACION: LUZ PLANA DE TRABAJO (ACTIVO)"
-                : "ILUMINACION: ATMOSFERA BOMB BREAKER (ACTIVO)";
+                : "ILUMINACION: ATMOSFERA BONE BREAKER (ACTIVO)";
 
-            if (GUILayout.Button(lightModeLabel, m_BarButtonStyle, GUILayout.Height(54f)))
+            if (GUILayout.Button(lightModeLabel, m_BarButtonStyle, GUILayout.Height(50f)))
             {
                 PlayClick();
                 persist.UseBrightWorkLighting = !persist.UseBrightWorkLighting;
+            }
+
+            GUILayout.Space(12f);
+
+            string screenModeLabel = persist.IsFullscreen
+                ? "PANTALLA: PANTALLA COMPLETA (ACTIVO)"
+                : "PANTALLA: MODO VENTANA (ACTIVO)";
+
+            if (GUILayout.Button(screenModeLabel, m_BarButtonStyle, GUILayout.Height(50f)))
+            {
+                PlayClick();
+                persist.ApplyDisplayMode(!persist.IsFullscreen, true);
             }
 
             GUILayout.EndVertical();
 
             GUILayout.FlexibleSpace();
 
-            if (GUILayout.Button("VOLVER", m_BarButtonStyle, GUILayout.Height(54f)))
+            if (GUILayout.Button("VOLVER", m_BarButtonStyle, GUILayout.Height(50f)))
             {
                 PlayClick();
                 m_CurrentPage = SubPage.Home;

@@ -2,12 +2,15 @@ using System.Collections.Generic;
 using Unity.FPS.Game;
 using Unity.FPS.Gameplay;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace BoomerShooter.LevelSystem
 {
     public class PlayerCampaignPersistence : MonoBehaviour
     {
         public static PlayerCampaignPersistence Instance { get; private set; }
+
+        const string k_FullscreenPrefKey = "BB_Fullscreen";
 
         public float SavedHealth = -1f;
         public int SavedActiveWeaponIndex = 0;
@@ -18,6 +21,7 @@ namespace BoomerShooter.LevelSystem
         public float MasterVolume = 1.0f;
         public float LookSensitivity = 1.0f;
         public bool UseBrightWorkLighting = false;
+        public bool IsFullscreen = true;
 
         [System.NonSerialized]
         public HashSet<string> CollectedKeys = new HashSet<string>();
@@ -50,6 +54,40 @@ namespace BoomerShooter.LevelSystem
 
             Instance = this;
             DontDestroyOnLoad(gameObject);
+
+            IsFullscreen = PlayerPrefs.GetInt(k_FullscreenPrefKey, 1) == 1;
+            ApplyDisplayMode(IsFullscreen, false);
+        }
+
+        void Update()
+        {
+            if (Keyboard.current != null && Keyboard.current.f11Key.wasPressedThisFrame)
+            {
+                ApplyDisplayMode(!IsFullscreen, true);
+            }
+        }
+
+        public void ApplyDisplayMode(bool fullscreen, bool savePref = true)
+        {
+            IsFullscreen = fullscreen;
+            if (savePref)
+            {
+                PlayerPrefs.SetInt(k_FullscreenPrefKey, fullscreen ? 1 : 0);
+                PlayerPrefs.Save();
+            }
+
+#if !UNITY_EDITOR
+            if (fullscreen)
+            {
+                int w = Display.main != null && Display.main.systemWidth > 0 ? Display.main.systemWidth : Screen.currentResolution.width;
+                int h = Display.main != null && Display.main.systemHeight > 0 ? Display.main.systemHeight : Screen.currentResolution.height;
+                Screen.SetResolution(w, h, FullScreenMode.FullScreenWindow);
+            }
+            else
+            {
+                Screen.SetResolution(1280, 720, FullScreenMode.Windowed);
+            }
+#endif
         }
 
         public void SaveState(GameObject player)
